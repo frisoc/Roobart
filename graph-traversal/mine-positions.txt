@@ -1,0 +1,11 @@
+Format: (x, y)
+color: 0, 0, 0
+mine1: 30, 50
+mine2: 155, 100
+mine3: 155, 200
+mine4: 110, 305
+mine5: 280, 110
+mine6: 275, 340
+mine7: 430, 90
+mine8: 380, 230
+mine9: 475, 335
