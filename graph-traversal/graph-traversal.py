@@ -157,7 +157,7 @@ def path_minefield():
     Runs the A* implementation on the image for Task 2
     :return: The image and path list
     """
-    file_str = "graph-traversal/minefield.jpg"
+    file_str = "minefield.jpg"
     nodes = {1: [50, 30], 2: [100, 155], 3: [200, 155],
              4:[305, 110], 5: [110, 280], 6: [340, 275],
              7:[90, 430], 8:[230, 380], 9:[335, 475]}
@@ -169,7 +169,7 @@ def path_minefield():
 def readIMG():
     global callBackImg
     cv.samples.addSamplesDataSearchPath(
-        "C:/Users/botzocc/PycharmProjects/Senior Year/Robotics/Final Project/graph-traversal/")
+        "/graph-traversal/")
     orig = cv.imread(cv.samples.findFile("minefield.jpg"))
     # orig = cv.imread("/graph-traversal/minefield-colored.png.jpg")
     print(orig)

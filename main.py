@@ -1,1 +1,1 @@
-from ev3dev2.motorimport OUTPUT_A
+# from ev3dev2.motorimport OUTPUT_A
