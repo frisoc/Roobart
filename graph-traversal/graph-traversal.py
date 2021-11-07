@@ -88,18 +88,82 @@ def dist(p1, p2):
     return d
 
 
-def bfs(start, nodes):
-    visited = list()
-    queue = list()
-    visited.append(start)
-    queue.append(start)
+def get_neighbors(img, point):
+    """
+        Find the neighboring points within an image
+        :param img: The image to find the neighbors in
+        :param point: The point in the image
+        :return: A list of the valid neighbors
+        """
+    neighbors = []
+    y = point[0]
+    x = point[1]
+    for i in range(4):
+        new_point = []
+        new_y_pos = 0
+        new_x_pos = 0
+        if i == 0:
+            new_y_pos = y + 1
+            new_x_pos = x
+        elif i == 1:
+            new_x_pos = x + 1
+            new_y_pos = y
+        elif i == 2:
+            new_y_pos = y - 1
+            new_x_pos = x
+        elif i == 3:
+            new_x_pos = x - 1
+            new_y_pos = y
+
+        new_color = img[new_y_pos][new_x_pos]
+        new_point = [new_y_pos, new_x_pos]
+
+        # print(new_color)
+        if new_color != 0:
+            neighbors.append(new_point)
+
+    return neighbors
+
+
+def bfs_connected_component(graph, start):
+    explored = []
+    queue = [start]
+
     while queue:
-        s = queue.pop(0)
-        for n in nodes:
-            if n not in visited:
-                visited.append(n)
-                queue.append(n)
-    return visited, queue
+        node = queue.pop(0)
+        if node not in explored:
+            explored.append(node)
+            neighbours = graph[node]
+
+            for neighbour in neighbours:
+                queue.append(neighbour)
+    return explored
+
+
+def bfs(img, start, goal, nodes):
+    """
+    Implementation of breadth-first search to search through a set of points
+    :param start: The starting position of the robot
+    :param goal: The starting position of the robot
+    :param nodes: The list of points to build a path from
+    :return: The visitied and queue list
+    """
+    open = list()
+    closed = list()
+    open.append(start)
+    while len(open) > 0:
+        current = open.pop(0)
+        closed.append(current)
+        if current == goal:
+            path = []
+            while current != start:
+                path.append(current)
+            return path[::-1]
+
+        for n in get_neighbors(img, current):
+            if n not in open:
+                open.append(n)
+    return []
 
 
 def findBlob(orig, color):
@@ -152,18 +216,42 @@ def draw_centroid(image):
 
     return int(x_center), int(y_center)
 
-def path_minefield():
-    """
-    Runs the A* implementation on the image for Task 2
-    :return: The image and path list
-    """
-    file_str = "minefield.jpg"
-    nodes = {1: [50, 30], 2: [100, 155], 3: [200, 155],
-             4:[305, 110], 5: [110, 280], 6: [340, 275],
-             7:[90, 430], 8:[230, 380], 9:[335, 475]}
 
-    (v, q) = bfs([0, 0], list(nodes.values()))
-    return v, q
+# def find_path(file_str, robot_color, mine1_color, mine9_color, color, scale):
+#     """
+#     Runs the A* implementation on the image for Task 2
+#     :return: The image and path list
+#     """
+#     orig = cv.imread(cv.samples.findFile(file_str))
+#     (height, width, channels) = orig.shape
+#     resize = cv.resize(orig, (int(width / scale), int(height / scale)))
+#
+#     robot_thres = findBlob(orig, robot_color)
+#     start_x, start_y = draw_centroid(robot_thres)
+#
+#     mine1_thres = findBlob(orig, mine1_color)
+#     mine1_x, mine1_y = draw_centroid(orig)
+#
+#     mine9_thres = findBlob(orig, mine9_color)
+#     mine9_x, mine9_y = draw_centroid(mine9_thres)
+#
+#     thres = findBlob(orig, color)
+#     cv.imwrite("thres.png", thres)
+#
+#     robot_start = [start_x, start_y]
+#     mine_start = [mine1_x, mine1_y]
+#     mine_end = [mine9_x, mine9_y]
+#
+#     (v, q) = bfs([0, 0], [335, 475], blob, list(nodes.values()))
+#     new_image = thres + robot_thres + mine1_thres + mine9_thres
+#     return [new_image, path]
+
+def minefieldImage():
+    color = np.flip(np.array([255, 255, 255]))
+    nodes = {1: [50, 30], 2: [100, 155], 3: [200, 155],
+             4: [305, 110], 5: [110, 280], 6: [340, 275],
+             7: [90, 430], 8: [230, 380], 9: [335, 475]}
+    pass
 
 
 def readIMG():
@@ -172,7 +260,7 @@ def readIMG():
         "/graph-traversal/")
     orig = cv.imread(cv.samples.findFile("minefield.jpg"))
     # orig = cv.imread("/graph-traversal/minefield-colored.png.jpg")
-    print(orig)
+    # print(orig)
     callBackImg = orig
     cv.imshow("Display window", orig)
     while True:
@@ -192,22 +280,24 @@ def main():
     # scale = 10
     #
     (img, path) = path_minefield()
-    #
-    # (height, width, channels) = img.shape
-    # resize = cv.resize(img, (width * scale, height * scale))
-    # (height, width) = resize.shape
-    # resize = resize.reshape(height, width, 1)
-    # rPath = []
-    #
-    # for p in path:
-    #     rPath.append([p[0] * scale, p[1] * scale])
-    #
-    # print("Path", rPath)
-    #
-    # drawPath(resize, rPath)
-    # showImage([resize])
+
+    (height, width, channels) = img.shape
+    scale = 10
+    resize = cv.resize(img, (width * scale, height * scale))
+    (height, width) = resize.shape
+    resize = resize.reshape(height, width, 1)
+    rPath = []
+
+    for p in path:
+        rPath.append([p[0] * scale, p[1] * scale])
+
+    print("Path", rPath)
+
+    drawPath(resize, rPath)
+    showImage([resize])
     # readIMG()
-    # print(path_minefield())
+    # path_minefield()
+
 
 if __name__ == '__main__':
     main()
