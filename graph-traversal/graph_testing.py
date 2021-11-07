@@ -1,4 +1,5 @@
 # https://pythoninwonderland.wordpress.com/2017/03/18/how-to-implement-breadth-first-search-in-python/
+import mine
 
 def bfs_connected_component(graph, start):
     explored = []
@@ -67,3 +68,6 @@ mine_graph = {"A": ["B"],
               }
 print(bfs_connected_component(mine_graph, "A"))
 print(bfs_shortest_path(mine_graph, "A", "G"))
+
+mine_a = Mine("A", 10, 20)
+print(type(mine_a))
