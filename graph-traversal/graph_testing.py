@@ -1,5 +1,5 @@
 # https://pythoninwonderland.wordpress.com/2017/03/18/how-to-implement-breadth-first-search-in-python/
-import mine
+from mine import Mine
 
 def bfs_connected_component(graph, start):
     explored = []
