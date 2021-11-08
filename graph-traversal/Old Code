@@ -1,0 +1,35 @@
+# def find_path(file_str, robot_color, mine1_color, mine9_color, color, scale):
+#     """
+#     Runs the A* implementation on the image for Task 2
+#     :return: The image and path list
+#     """
+#     orig = cv.imread(cv.samples.findFile(file_str))
+#     (height, width, channels) = orig.shape
+#     resize = cv.resize(orig, (int(width / scale), int(height / scale)))
+#
+#     robot_thres = findBlob(orig, robot_color)
+#     start_x, start_y = draw_centroid(robot_thres)
+#
+#     mine1_thres = findBlob(orig, mine1_color)
+#     mine1_x, mine1_y = draw_centroid(orig)
+#
+#     mine9_thres = findBlob(orig, mine9_color)
+#     mine9_x, mine9_y = draw_centroid(mine9_thres)
+#
+#     thres = findBlob(orig, color)
+#     cv.imwrite("thres.png", thres)
+#
+#     robot_start = [start_x, start_y]
+#     mine_start = [mine1_x, mine1_y]
+#     mine_end = [mine9_x, mine9_y]
+#
+#     (v, q) = bfs([0, 0], [335, 475], blob, list(nodes.values()))
+#     new_image = thres + robot_thres + mine1_thres + mine9_thres
+#     return [new_image, path]
+
+# def minefieldImage():
+#     color = np.flip(np.array([255, 255, 255]))
+#     nodes = {1: [50, 30], 2: [100, 155], 3: [200, 155],
+#              4: [305, 110], 5: [110, 280], 6: [340, 275],
+#              7: [90, 430], 8: [230, 380], 9: [335, 475]}
+#     pass

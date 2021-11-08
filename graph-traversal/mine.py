@@ -1,6 +1,6 @@
 class Mine:
-    def __init__(self, letter, x, y, neighbors):
-        self.letter = letter
+    def __init__(self, identifier, x, y, neighbors):
+        self.identifier = identifier
         self.x = x
         self.y = y
         self.neighbors = neighbors
@@ -13,3 +13,9 @@ class Mine:
 
     def get_y_x(self):
         return [self.y, self.x]
+
+    def __repr__(self):
+        return f"Mine: {self.identifier}\n(x, y): {self.x}, {self.y}\nNumber of neighbors: {len(self.neighbors)}"
+
+    def get_num_neighbors(self):
+        return len(self.neighbors)

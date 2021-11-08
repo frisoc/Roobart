@@ -38,96 +38,13 @@ def showImage(images):
     cv.destroyAllWindows()
 
 
-def getNeighbors_(img, point):
+def bfs_connected_component(start, graph):
     """
-    Find the neighboring points within an image
-    :param img: The image to find the neighbors in
-    :param point: The point in the image
-    :return: A list of the valid neighbors
+    Implementation of breadth-first search to search through a set of points
+    :param start: The starting position of the robot
+    :param graph: The list of points to build a path from
+    :return: The path of the graph
     """
-    neighbors = []
-    y = point[0]
-    x = point[1]
-    (height, width, channels) = img.shape
-    for i in range(4):
-        new_point = []
-        new_y_pos = 0
-        new_x_pos = 0
-        if i == 0:
-            new_y_pos = y + 1
-            new_x_pos = x
-        elif i == 1:
-            new_x_pos = x + 1
-            new_y_pos = y
-        elif i == 2:
-            new_y_pos = y - 1
-            new_x_pos = x
-        elif i == 3:
-            new_x_pos = x - 1
-            new_y_pos = y
-
-        if (new_x_pos >= width or new_y_pos >= height) or (new_x_pos <= 0 or new_y_pos <= 0):
-            new_color = 255
-        else:
-            new_color = img[new_y_pos][new_x_pos]
-            new_point = [new_y_pos, new_x_pos]
-
-        if new_color != 255:
-            neighbors.append(new_point)
-
-    return neighbors
-
-
-def dist(p1, p2):
-    """
-    Calculates the distance between two points (the points are a tuple of (y, x))
-    :param p1: The first point (y, x)
-    :param p2: The second point (y, x)
-    :return: The distance between the two points
-    """
-    # p1 and p2 are a tuple of y, x
-    d = sqrt(((p2[1] - p1[1]) ** 2) + ((p2[0] - p2[0]) ** 2))
-    return d
-
-
-def get_neighbors(img, point):
-    """
-        Find the neighboring points within an image
-        :param img: The image to find the neighbors in
-        :param point: The point in the image
-        :return: A list of the valid neighbors
-        """
-    neighbors = []
-    y = point[0]
-    x = point[1]
-    for i in range(4):
-        new_point = []
-        new_y_pos = 0
-        new_x_pos = 0
-        if i == 0:
-            new_y_pos = y + 1
-            new_x_pos = x
-        elif i == 1:
-            new_x_pos = x + 1
-            new_y_pos = y
-        elif i == 2:
-            new_y_pos = y - 1
-            new_x_pos = x
-        elif i == 3:
-            new_x_pos = x - 1
-            new_y_pos = y
-
-        new_color = img[new_y_pos][new_x_pos]
-        new_point = [new_y_pos, new_x_pos]
-
-        # print(new_color)
-        if new_color != 0:
-            neighbors.append(new_point)
-
-    return neighbors
-
-
-def bfs_connected_component(graph, start):
     explored = []
     queue = [start]
 
@@ -142,29 +59,34 @@ def bfs_connected_component(graph, start):
     return explored
 
 
-def bfs(img, start, goal, nodes):
+def bfs_shortest_path(start, goal, graph):
     """
-    Implementation of breadth-first search to search through a set of points
+    Implementation of breadth-first search to find the shortest path through a set of points
     :param start: The starting position of the robot
-    :param goal: The starting position of the robot
-    :param nodes: The list of points to build a path from
-    :return: The visitied and queue list
+    :param goal: The goal position
+    :param graph: The list of points to build a path from
+    :return: The shortest path of the graph from start to goal
     """
-    open = list()
-    closed = list()
-    open.append(start)
-    while len(open) > 0:
-        current = open.pop(0)
-        closed.append(current)
-        if current == goal:
-            path = []
-            while current != start:
-                path.append(current)
-            return path[::-1]
+    explored = []
+    queue = [[start]]
 
-        for n in get_neighbors(img, current):
-            if n not in open:
-                open.append(n)
+    if start == goal:
+        return "That was easy! Start = goal"
+
+    while queue:
+        path = queue.pop(0)
+        node = path[-1]
+        if node not in explored:
+            neighbours = graph[node]
+            for neighbour in neighbours:
+                new_path = list(path)
+                new_path.append(neighbour)
+                queue.append(new_path)
+                if neighbour == goal:
+                    return new_path
+
+            explored.append(node)
+
     return []
 
 
@@ -182,16 +104,6 @@ def findBlob(orig, color):
     mask = mask.reshape(height, width, 1)
     return mask
 
-
-# def drawPath(img, path):
-#     """
-#     Draws a path generated from A*
-#     :param img: The image to draw on
-#     :param path: A list of coordinates
-#     :return: None
-#     """
-#     for p in path:
-#         cv.circle(img, (p[1], p[0]), 5, (125), -1)
 
 def drawPath(img, path):
     """
@@ -219,43 +131,12 @@ def draw_centroid(image):
     return int(x_center), int(y_center)
 
 
-# def find_path(file_str, robot_color, mine1_color, mine9_color, color, scale):
-#     """
-#     Runs the A* implementation on the image for Task 2
-#     :return: The image and path list
-#     """
-#     orig = cv.imread(cv.samples.findFile(file_str))
-#     (height, width, channels) = orig.shape
-#     resize = cv.resize(orig, (int(width / scale), int(height / scale)))
-#
-#     robot_thres = findBlob(orig, robot_color)
-#     start_x, start_y = draw_centroid(robot_thres)
-#
-#     mine1_thres = findBlob(orig, mine1_color)
-#     mine1_x, mine1_y = draw_centroid(orig)
-#
-#     mine9_thres = findBlob(orig, mine9_color)
-#     mine9_x, mine9_y = draw_centroid(mine9_thres)
-#
-#     thres = findBlob(orig, color)
-#     cv.imwrite("thres.png", thres)
-#
-#     robot_start = [start_x, start_y]
-#     mine_start = [mine1_x, mine1_y]
-#     mine_end = [mine9_x, mine9_y]
-#
-#     (v, q) = bfs([0, 0], [335, 475], blob, list(nodes.values()))
-#     new_image = thres + robot_thres + mine1_thres + mine9_thres
-#     return [new_image, path]
-
-# def minefieldImage():
-#     color = np.flip(np.array([255, 255, 255]))
-#     nodes = {1: [50, 30], 2: [100, 155], 3: [200, 155],
-#              4: [305, 110], 5: [110, 280], 6: [340, 275],
-#              7: [90, 430], 8: [230, 380], 9: [335, 475]}
-#     pass
-
 def create_mines(nodes):
+    """
+    Creates a list of Mine objects from a list of positions
+    :param nodes: A list of positions where the positions are a list of [y, x]
+    :return: A list of Mine objects
+    """
     mines = []
     for k, v in nodes.items():
         mine = Mine(k, v[1], v[0], [])
@@ -265,6 +146,11 @@ def create_mines(nodes):
 
 
 def add_neighbors(mines):
+    """
+    Randomly assigns neighbors to a list of Mines
+    :param mines: A list of Mine objects
+    :return: None
+    """
     for mine in mines:
         num_mines = randint(1, 3)
         for i in range(num_mines):
@@ -319,9 +205,10 @@ def main():
              4: [305, 110], 5: [110, 280], 6: [340, 275],
              7: [90, 430], 8: [230, 380], 9: [335, 475]}
     mines = create_mines(nodes)
-    print(mines)
+    # print(mines)
     add_neighbors(mines)
-    print(mines[0].neighbors[0].neighbors)
+    print(mines[0])
+
 
 if __name__ == '__main__':
     main()
