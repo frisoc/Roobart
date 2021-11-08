@@ -1,6 +1,6 @@
 """
-Author: Chris Botzoc and Nikhil Gajghate
-Date Due: 10/25/2021
+Author: Chris Botzoc, Cody Friso, Nikhil Gajghate
+Assignment: Final Project
 Class: Robotics
 Instructor: Velez
 """
@@ -12,7 +12,7 @@ def bfs_connected_component(start, graph):
     """
     Implementation of breadth-first search to search through a set of points
     :param start: The starting position of the robot
-    :param graph: The list of points to build a path from
+    :param graph: The dictionary of points to build a path from
     :return: The path of the graph
     """
     explored = []
@@ -34,7 +34,7 @@ def bfs_shortest_path(start, goal, graph):
     Implementation of breadth-first search to find the shortest path through a set of points
     :param start: The starting position of the robot
     :param goal: The goal position
-    :param graph: The list of points to build a path from
+    :param graph: The dictionary of points to build a path from
     :return: The shortest path of the graph from start to goal
     """
     explored = []
@@ -99,7 +99,10 @@ def make_graph(mines):
     for mine in mines:
         neighbor_list = []
         for neighbor in mine.neighbors:
-            neighbor_list.append(neighbor.identifier)
+            if type(neighbor) == Mine:
+                neighbor_list.append(neighbor.identifier)
+            else:
+                neighbor_list.append(neighbor)
         mine_graph[mine.identifier] = neighbor_list
 
     return mine_graph
