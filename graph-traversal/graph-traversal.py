@@ -9,6 +9,7 @@ import numpy as np
 from math import sqrt
 from mine import Mine
 from random import randint
+from random import choices
 
 callBackImg = None
 
@@ -155,7 +156,10 @@ def add_neighbors(mines):
         num_mines = randint(1, 3)
         for i in range(num_mines):
             mine_select = randint(0, len(mines) - 1)
-            mine.add_neighbor(mines[mine_select])
+            while mines[mine_select] not in mine.neighbors:
+                mine.add_neighbor(mines[mine_select])
+                mine_select = randint(0, len(mines) - 1)
+
 
 
 def readIMG():
@@ -208,6 +212,14 @@ def main():
     # print(mines)
     add_neighbors(mines)
     print(mines[0])
+    mine_graph = dict()
+    for mine in mines:
+        neighbor_list = []
+        for neighbor in mine.neighbors:
+            neighbor_list.append(neighbor.identifier)
+        mine_graph[mine.identifier] = neighbor_list
+    print(mine_graph)
+    print(len(bfs_connected_component(1, mine_graph)))
 
 
 if __name__ == '__main__':

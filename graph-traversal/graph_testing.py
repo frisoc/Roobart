@@ -89,6 +89,7 @@ mine3 = Mine("C", 3, 4, ["A", "B"])
 mines = [mine1, mine2, mine3]
 mine_graph2 = dict()
 for mine in mines:
-    mine_graph2[mine.letter] = mine.neighbors
+    mine_graph2[mine.identifier] = mine.neighbors
+print(mine_graph2)
 print(bfs_connected_component(mine_graph2, "A"))
 print(bfs_shortest_path(mine_graph2, "A", "C"))
