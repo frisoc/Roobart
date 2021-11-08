@@ -1,6 +1,7 @@
 # https://pythoninwonderland.wordpress.com/2017/03/18/how-to-implement-breadth-first-search-in-python/
 from mine import Mine
 
+
 def bfs_connected_component(graph, start):
     explored = []
     queue = [start]
@@ -69,5 +70,25 @@ mine_graph = {"A": ["B"],
 print(bfs_connected_component(mine_graph, "A"))
 print(bfs_shortest_path(mine_graph, "A", "G"))
 
-mine_a = Mine("A", 10, 20)
+mine_a = Mine("A", 10, 20, [])
 print(type(mine_a))
+if type(mine_a) == Mine:
+    print("Its a mine")
+
+graph2 = {"A": ["B", "C"],
+          "B": ["A", "C"],
+          "C": ["A", "B"]
+          }
+print(bfs_connected_component(graph2, "A"))
+print(bfs_shortest_path(graph2, "A", "C"))
+
+mine1 = Mine("A", 0, 10, ["B", "C"])
+mine2 = Mine("B", 12, 10, ["A", "C"])
+mine3 = Mine("C", 3, 4, ["A", "B"])
+
+mines = [mine1, mine2, mine3]
+mine_graph2 = dict()
+for mine in mines:
+    mine_graph2[mine.letter] = mine.neighbors
+print(bfs_connected_component(mine_graph2, "A"))
+print(bfs_shortest_path(mine_graph2, "A", "C"))

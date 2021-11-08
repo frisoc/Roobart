@@ -7,6 +7,8 @@ Instructor: Velez
 import cv2 as cv
 import numpy as np
 from math import sqrt
+from mine import Mine
+from random import randint
 
 callBackImg = None
 
@@ -246,12 +248,28 @@ def draw_centroid(image):
 #     new_image = thres + robot_thres + mine1_thres + mine9_thres
 #     return [new_image, path]
 
-def minefieldImage():
-    color = np.flip(np.array([255, 255, 255]))
-    nodes = {1: [50, 30], 2: [100, 155], 3: [200, 155],
-             4: [305, 110], 5: [110, 280], 6: [340, 275],
-             7: [90, 430], 8: [230, 380], 9: [335, 475]}
-    pass
+# def minefieldImage():
+#     color = np.flip(np.array([255, 255, 255]))
+#     nodes = {1: [50, 30], 2: [100, 155], 3: [200, 155],
+#              4: [305, 110], 5: [110, 280], 6: [340, 275],
+#              7: [90, 430], 8: [230, 380], 9: [335, 475]}
+#     pass
+
+def create_mines(nodes):
+    mines = []
+    for k, v in nodes.items():
+        mine = Mine(k, v[1], v[0], [])
+        mines.append(mine)
+
+    return mines
+
+
+def add_neighbors(mines):
+    for mine in mines:
+        num_mines = randint(1, 3)
+        for i in range(num_mines):
+            mine_select = randint(0, len(mines) - 1)
+            mine.add_neighbor(mines[mine_select])
 
 
 def readIMG():
@@ -279,25 +297,31 @@ def main():
     """
     # scale = 10
     #
-    (img, path) = path_minefield()
-
-    (height, width, channels) = img.shape
-    scale = 10
-    resize = cv.resize(img, (width * scale, height * scale))
-    (height, width) = resize.shape
-    resize = resize.reshape(height, width, 1)
-    rPath = []
-
-    for p in path:
-        rPath.append([p[0] * scale, p[1] * scale])
-
-    print("Path", rPath)
-
-    drawPath(resize, rPath)
-    showImage([resize])
+    # (img, path) = path_minefield()
+    #
+    # (height, width, channels) = img.shape
+    # scale = 10
+    # resize = cv.resize(img, (width * scale, height * scale))
+    # (height, width) = resize.shape
+    # resize = resize.reshape(height, width, 1)
+    # rPath = []
+    #
+    # for p in path:
+    #     rPath.append([p[0] * scale, p[1] * scale])
+    #
+    # print("Path", rPath)
+    #
+    # drawPath(resize, rPath)
+    # showImage([resize])
     # readIMG()
-    # path_minefield()
-
+    # path_minefield
+    nodes = {1: [50, 30], 2: [100, 155], 3: [200, 155],
+             4: [305, 110], 5: [110, 280], 6: [340, 275],
+             7: [90, 430], 8: [230, 380], 9: [335, 475]}
+    mines = create_mines(nodes)
+    print(mines)
+    add_neighbors(mines)
+    print(mines[0].neighbors[0].neighbors)
 
 if __name__ == '__main__':
     main()
