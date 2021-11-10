@@ -9,11 +9,9 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 
 import math
 
-
 # CONSTANTS
 ROBOT_DIAMETER = 46.49
 WHEEL_CIRCUMFERENCE = 17.28
-
 
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
@@ -25,8 +23,9 @@ left_motor = Motor(Port.B)
 right_motor = Motor(Port.C)
 gyro_sensor = GyroSensor(Port.S1)
 
-d = DriveBase(left_motor, right_motor, wheel_diameter=56, axle_track=114.0) #might need to change last 2 params
+d = DriveBase(left_motor, right_motor, wheel_diameter=56, axle_track=114.0)  # might need to change last 2 params
 d.settings(700, 100, 100, 100)
+
 
 def calculate_c(a, b):
     """
@@ -59,6 +58,7 @@ def calculate_theta(x, y):
     """
     return math.degrees(math.atan2(y, x))
 
+
 def find_all_angles(mine_positions):
     """
     Finds all the angles between every point in the path
@@ -76,7 +76,7 @@ def find_all_angles(mine_positions):
             path = "{}-{}".format(ids[len(ids) - 1], ids[0])
         else:
             angle = calculate_theta(positions[i + 1][0] - positions[i][0], positions[i + 1][1] - positions[i][1])
-            path = "{}-{}".format(ids[i], ids[i+1])
+            path = "{}-{}".format(ids[i], ids[i + 1])
 
         paths.append(path)
         angles.append(angle)
@@ -99,7 +99,7 @@ def find_all_distances(mine_positions):
             path = "{}-{}".format(ids[len(ids) - 1], ids[0])
         else:
             dist = calculate_dist(positions[i + 1], positions[i])
-            path = "{}-{}".format(ids[i], ids[i+1])
+            path = "{}-{}".format(ids[i], ids[i + 1])
         paths.append(path)
         dists.append(dist)
 
@@ -119,7 +119,6 @@ def combine_results(paths, results):
     return combo
 
 
-
 def path_mines():
     mine_pos = {"S": [0, 0], "A": [13, 18], "B": [19, 14], "C": [40, 36]}
     angle1 = calculate_theta(mine_pos["A"][0], mine_pos["A"][1])
@@ -135,8 +134,9 @@ def path_mines():
     d.turn(angle3)
     d.straight(dist3)
 
+
 def main():
     path_mines()
 
-path_mines()
 
+path_mines()
