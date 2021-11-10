@@ -7,6 +7,7 @@ from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
 
+
 # CONSTANTS
 ROBOT_DIAMETER = 46.49
 WHEEL_CIRCUMFERENCE = 17.28
@@ -20,7 +21,7 @@ ev3 = EV3Brick()
 
 left_motor = Motor(Port.B)
 right_motor = Motor(Port.C)
-color_sensor = ColorSensor(Port.S1)
+color_sensor = ColorSensor(Port.S3)
 
 d = DriveBase(left_motor, right_motor, wheel_diameter=56, axle_track=114.0) #might need to change last 2 params
 d.settings(700, 100, 100, 100)
@@ -62,13 +63,15 @@ def detect_bombs(granularity, turn_distance, edge_distance, bomb_color, field_co
 
 # write your program here
 granularity = 150
-turn_distance = 150 
-edge_distance = 300 
+turn_distance = 200
+edge_distance = 400
 
-points = detect_bombs(granularity, turn_distance, edge_distance, Color.BLACK, Color.BROWN)
+# points = detect_bombs(granularity, turn_distance, edge_distance, Color.BLACK, Color.BROWN)
+points = detect_bombs(granularity, turn_distance, edge_distance, Color.WHITE, Color.BLUE)
 print(points)
 # print("color 1: ", color_sensor.color())
 # ev3.speaker.say("Detecting Color")
 # d.straight(150)
 # print('color 2: ', color_sensor.color())
 # ev3.speaker.say("Detecting Color")
+
