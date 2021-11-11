@@ -94,6 +94,36 @@ def combine_results(paths, results):
     return combo
 
 
+def sort_dict(a_list, a_dict):
+    """
+    Sorts a dictionary based on a list
+    :param a_list: The list to use to sort
+    :param a_dict: The unsorted dictionary
+    :return: The sorted dictionary
+    """
+    sorted_dict = dict()
+    for ele in a_list:
+        sorted_dict[ele] = a_dict[ele]
+    return sorted_dict
+
+
+def assign_mines(raw_pos):
+    """
+    Takes a list of raw positions of mines and converts it to a dictionary
+    :param raw_pos: The list of list coordinates of the mine positions
+    :return: A dictionary where the key is the identifier and the value is the list of positions
+    """
+    complete = {"S": [0, 0]}
+    mine_pos = dict()
+    for i, pos in enumerate(raw_pos):
+        letter = chr(i + 65)
+        if letter == "S":
+            letter = chr(i + 65 + 1)
+        mine_pos[letter] = pos
+    complete.update(mine_pos)
+    return complete
+
+
 def create_test_mines1():
     """
     Creates a list of Mine objects for testing
@@ -126,18 +156,26 @@ def create_test_mines2():
 
     return [mine0, mine1, mine2, mine3, mine4, mine5]
 
-def sort_dict(a_list, a_dict):
-    sorted_dict = dict()
-    for ele in a_list:
-        sorted_dict[ele] = a_dict[ele]
-    return sorted_dict
-
 
 def main():
     """
     Main driver
     :return: None
     """
+    coords = [[0, 10], [15, 20], [30, 10]]
+    mine_pos = assign_mines(coords)
+    graph, path = gc.find_path("S", mine_pos)
+
+    sorted_dict = sort_dict(path, mine_pos)
+    angles = find_all_angles(sorted_dict)
+    dists = find_all_distances(sorted_dict)
+
+    print(graph, path)
+    print(angles)
+    print(dists)
+
+
+def testing():
     # mine_pos = {"S": [0, 0], "A": [10, 15], "B": [14, 27], "C": [20, 27], "D": [20, 17]}
     # mines = create_test_mines1()
 
@@ -156,7 +194,6 @@ def main():
     a = sort_dict(path, mine_pos)
     print(find_all_angles(a))
     print(find_all_distances(a))
-
 
 
 if __name__ == '__main__':
