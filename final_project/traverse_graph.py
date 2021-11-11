@@ -9,9 +9,11 @@ from pybricks.media.ev3dev import SoundFile, ImageFile
 
 import math
 
+
 # CONSTANTS
 ROBOT_DIAMETER = 46.49
 WHEEL_CIRCUMFERENCE = 17.28
+
 
 # This program requires LEGO EV3 MicroPython v2.0 or higher.
 # Click "Open user guide" on the EV3 extension tab for more information.
@@ -23,9 +25,8 @@ left_motor = Motor(Port.B)
 right_motor = Motor(Port.C)
 gyro_sensor = GyroSensor(Port.S1)
 
-d = DriveBase(left_motor, right_motor, wheel_diameter=56, axle_track=114.0)  # might need to change last 2 params
+d = DriveBase(left_motor, right_motor, wheel_diameter=56, axle_track=114.0) #might need to change last 2 params
 d.settings(700, 100, 100, 100)
-
 
 def calculate_c(a, b):
     """
@@ -58,7 +59,6 @@ def calculate_theta(x, y):
     """
     return math.degrees(math.atan2(y, x))
 
-
 def find_all_angles(mine_positions):
     """
     Finds all the angles between every point in the path
@@ -76,7 +76,7 @@ def find_all_angles(mine_positions):
             path = "{}-{}".format(ids[len(ids) - 1], ids[0])
         else:
             angle = calculate_theta(positions[i + 1][0] - positions[i][0], positions[i + 1][1] - positions[i][1])
-            path = "{}-{}".format(ids[i], ids[i + 1])
+            path = "{}-{}".format(ids[i], ids[i+1])
 
         paths.append(path)
         angles.append(angle)
@@ -99,7 +99,7 @@ def find_all_distances(mine_positions):
             path = "{}-{}".format(ids[len(ids) - 1], ids[0])
         else:
             dist = calculate_dist(positions[i + 1], positions[i])
-            path = "{}-{}".format(ids[i], ids[i + 1])
+            path = "{}-{}".format(ids[i], ids[i+1])
         paths.append(path)
         dists.append(dist)
 
@@ -118,6 +118,24 @@ def combine_results(paths, results):
         combo[paths[i]] = results[i]
     return combo
 
+def assign_mines(raw_pos):
+    """
+    Takes a list of raw positions of mines and converts it to a dictionary
+    :param paths: The vertex paths in the form of "Vertex1-Vertex2"
+    :param results: The calculations from the respective find_all functions
+    :return: A dictionary where the key is the vertex path and the value is the respective result
+    """
+    # [[0, 10], [15, 20], [30, 10]]
+    complete = {"S": [0, 0]}
+    mine_pos = dict()
+    for i, pos in enumerate(raw_pos):
+        letter = chr(i + 65)
+        print(letter)
+        if letter == "S":
+            letter = chr(i + 65 + 1)
+        mine_pos[letter] = pos
+    complete.update(mine_pos)
+    return complete
 
 def path_mines():
     mine_pos = {"S": [0, 0], "A": [13, 18], "B": [19, 14], "C": [40, 36]}
@@ -134,9 +152,8 @@ def path_mines():
     d.turn(angle3)
     d.straight(dist3)
 
-
 def main():
     path_mines()
 
-
 path_mines()
+
